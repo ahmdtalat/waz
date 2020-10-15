@@ -1,82 +1,82 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
 const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
-const countriesUrl = 'http://46.101.108.59/api/countries'
 
 const CountryContext = React.createContext()
 CountryContext.displayName = 'Country Context'
 
 function CountryProvider({ children }) {
   const [data, setData] = useState({
+    countries: null,
+    cities: null,
+    areas: null,
+    loading: false
+  })
+
+  const [location, setLocation] = useState({
     country: '',
     city: '',
     area: ''
   })
-  const [countries, setCountries] = useState(null)
-  const [cities, setCities] = useState(null)
-  const [areas, setAreas] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState({})
 
   const handleCountryChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value })
+    setLocation({ ...location, [e.target.name]: e.target.value })
   }
 
+  const { areas, cities, countries, loading } = data
+
+  // get countries
   useEffect(() => {
-    // get countries
-    fetch(proxyUrl + countriesUrl, { cache: 'force-cache' })
+    fetch(proxyUrl + 'http://46.101.108.59/api/countries', { cache: 'force-cache' })
       .then((response) => response.json())
-      .then((result) => setCountries(result.data))
+      .then((result) => setData({ ...data, countries: result.data }))
       .catch((e) => console.error(e))
   }, [])
 
+  // get cities
   useEffect(() => {
-    // get cities
-    if (data.country) {
-      setLoading(true)
-      setData({ ...data, city: '', area: '' })
-      const { id } = countries.find((c) => c.attributes.name === data.country)
+    if (location.country) {
+      setData({ ...data, loading: true })
+      setLocation({ ...location, city: '', area: '' })
+
+      const { id } = countries.find((c) => c.attributes.name === location.country)
 
       fetch(proxyUrl + `http://46.101.108.59/api/country/${id}/city`, { cache: 'force-cache' })
         .then((response) => response.json())
         .then((result) => {
-          setCities(result.data)
-          setLoading(false)
+          setData({ ...data, cities: result.data, loading: false })
         })
         .catch((e) => console.error(e))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.country])
+  }, [location.country])
 
+  // get areas
   useEffect(() => {
-    // get areas
-    if (data.country === 'Egypt' && data.city) {
-      setLoading(true)
-      setData({ ...data, area: '' })
+    if (location.country === 'Egypt' && location.city) {
+      setData({ ...data, loading: true })
+      setLocation({ ...location, area: '' })
 
-      const { id: cityID } = cities.find((c) => c.attributes.name === data.city)
-      const { id: countryID } = countries.find((c) => c.attributes.name === data.country)
+      const { id: cityID } = cities.find((c) => c.attributes.name === location.city)
+      const { id: countryID } = countries.find((c) => c.attributes.name === location.country)
 
       fetch(proxyUrl + `http://46.101.108.59/api//country/${countryID}/city/${cityID}/area`, { cache: 'force-cache' })
         .then((response) => response.json())
         .then((result) => {
-          setAreas(result.data)
-          setLoading(false)
+          setData({ ...data, areas: result.data, loading: false })
         })
         .catch((e) => console.error(e))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.city])
+  }, [location.city])
 
   return (
     <CountryContext.Provider
       value={{
-        data,
+        location,
         countries,
         cities,
         areas,
         loading,
-        error,
         handleCountryChange
       }}
     >

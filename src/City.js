@@ -2,14 +2,14 @@ import React, { useContext } from 'react'
 import { CountryContext } from './context'
 
 const City = () => {
-  const { data, handleCountryChange, loading, cities } = useContext(CountryContext)
+  const { location, handleCountryChange, loading, cities } = useContext(CountryContext)
 
   return (
     <div className='container'>
-      {data.country ? (
+      {location.country ? (
         <>
           <label htmlFor='city'>City</label>
-          <select name='city' id='city' onChange={handleCountryChange} value={data.city}>
+          <select name='city' id='city' onChange={handleCountryChange} value={location.city}>
             <option value='' disabled>
               Select
             </option>

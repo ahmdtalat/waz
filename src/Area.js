@@ -2,14 +2,14 @@ import React, { useContext } from 'react'
 import { CountryContext } from './context'
 
 const Area = () => {
-  const { data, handleCountryChange, loading, areas } = useContext(CountryContext)
+  const { location, handleCountryChange, loading, areas } = useContext(CountryContext)
 
   return (
     <div className='container'>
-      {data.country === 'Egypt' && data.city ? (
+      {location.country === 'Egypt' && location.city ? (
         <>
           <label htmlFor='area'>Area</label>
-          <select name='area' id='area' onChange={handleCountryChange} value={data.area}>
+          <select name='area' id='area' onChange={handleCountryChange} value={location.area}>
             <option value='' disabled>
               Select
             </option>
