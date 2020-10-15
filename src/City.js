@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { CountryContext } from './context'
 
 const City = () => {
-  const { location, handleCountryChange, loading, cities } = useContext(CountryContext)
+  const { location, handleCountryChange, loading, cities, error } = useContext(CountryContext)
 
   return (
     <div className='container'>
@@ -19,6 +19,7 @@ const City = () => {
               cities.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
             )}
           </select>
+          {error.city ? <span className='error'>please select a city</span> : null}
         </>
       ) : null}
     </div>

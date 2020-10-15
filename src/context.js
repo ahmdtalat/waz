@@ -20,6 +20,11 @@ function CountryProvider({ children }) {
     area: ''
   })
 
+  const [error, setError] = useState({
+    country: false,
+    city: false
+  })
+
   const handleCountryChange = (e) => {
     setLocation({ ...location, [e.target.name]: e.target.value })
   }
@@ -69,14 +74,20 @@ function CountryProvider({ children }) {
     }
   }, [location.city])
 
+  // set Errors
+  useEffect(() => {
+    setError({ ...error, city: !location.city, country: !location.country })
+  }, [location.country, location.city])
+
   return (
     <CountryContext.Provider
       value={{
+        error,
+        areas,
+        cities,
+        loading,
         location,
         countries,
-        cities,
-        areas,
-        loading,
         handleCountryChange
       }}
     >
