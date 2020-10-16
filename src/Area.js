@@ -5,10 +5,12 @@ const Area = () => {
   const { location, handleCountryChange, loading, areas } = useContext(CountryContext)
 
   return (
-    <div className='container'>
+    <>
       {location.country === 'Egypt' && location.city ? (
-        <>
-          <label htmlFor='area'>Area</label>
+        <div className='container'>
+          <label htmlFor='area'>
+            Area<span className='optional'> (optional) </span>
+          </label>
           <select name='area' id='area' onChange={handleCountryChange} value={location.area}>
             <option value='' disabled>
               Select
@@ -19,9 +21,9 @@ const Area = () => {
               areas.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
             )}
           </select>
-        </>
+        </div>
       ) : null}
-    </div>
+    </>
   )
 }
 

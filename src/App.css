@@ -1,8 +1,10 @@
-.App{
+form{
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 2rem;
+  width: 280px;
+  align-items: center;
 }
 
 .container{
@@ -18,6 +20,11 @@
   margin-bottom: .5rem;
 }
 
+.optional{
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .container > select{
   width: 250px;
   height: 35px;
@@ -27,7 +34,20 @@
   cursor: pointer;
 }
 
+button{
+  margin: .5rem;
+  width: 100px;
+  background: #0000ff;
+  color: #fff;
+  height: 30px;
+  border-radius: 5px;
+}
 
+button:disabled{
+  color: cadetblue;
+  background: #222;
+
+}
 
 .error{
   font-size: 14px;

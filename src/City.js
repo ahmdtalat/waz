@@ -6,22 +6,18 @@ const City = () => {
 
   return (
     <div className='container'>
-      {location.country ? (
-        <>
-          <label htmlFor='city'>City</label>
-          <select name='city' id='city' onChange={handleCountryChange} value={location.city}>
-            <option value='' disabled>
-              Select City
-            </option>
-            {!cities || loading ? (
-              <option>Loading</option>
-            ) : (
-              cities.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
-            )}
-          </select>
-          {error.city ? <span className='error'>please select a city</span> : null}
-        </>
-      ) : null}
+      <label htmlFor='city'>City</label>
+      <select name='city' id='city' onChange={handleCountryChange} value={location?.city}>
+        <option value='' disabled>
+          Select City
+        </option>
+        {!cities || loading ? (
+          <option>Loading</option>
+        ) : (
+          cities.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
+        )}
+      </select>
+      {error.city ? <span className='error'>please select a city</span> : null}
     </div>
   )
 }
