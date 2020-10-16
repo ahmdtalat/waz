@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+import { fetchData } from './helper'
 
 const CountryContext = React.createContext()
 CountryContext.displayName = 'Country Context'
@@ -33,9 +33,8 @@ function CountryProvider({ children }) {
 
   // get countries
   useEffect(() => {
-    fetch(proxyUrl + 'http://46.101.108.59/api/countries', { cache: 'force-cache' })
-      .then((response) => response.json())
-      .then((result) => setData({ ...data, countries: result.data }))
+    fetchData('http://46.101.108.59/api/countries')
+      .then((res) => setData({ ...data, countries: res }))
       .catch((e) => console.error(e))
   }, [])
 
@@ -47,11 +46,8 @@ function CountryProvider({ children }) {
 
       const { id } = countries.find((c) => c.attributes.name === location.country)
 
-      fetch(proxyUrl + `http://46.101.108.59/api/country/${id}/city`, { cache: 'force-cache' })
-        .then((response) => response.json())
-        .then((result) => {
-          setData({ ...data, cities: result.data, loading: false })
-        })
+      fetchData(`http://46.101.108.59/api/country/${id}/city`)
+        .then((res) => setData({ ...data, cities: res, loading: false }))
         .catch((e) => console.error(e))
     }
   }, [location.country])
@@ -65,11 +61,8 @@ function CountryProvider({ children }) {
       const { id: cityID } = cities.find((c) => c.attributes.name === location.city)
       const { id: countryID } = countries.find((c) => c.attributes.name === location.country)
 
-      fetch(proxyUrl + `http://46.101.108.59/api//country/${countryID}/city/${cityID}/area`, { cache: 'force-cache' })
-        .then((response) => response.json())
-        .then((result) => {
-          setData({ ...data, areas: result.data, loading: false })
-        })
+      fetchData(`http://46.101.108.59/api//country/${countryID}/city/${cityID}/area`)
+        .then((res) => setData({ ...data, areas: res, loading: false }))
         .catch((e) => console.error(e))
     }
   }, [location.city])

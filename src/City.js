@@ -11,7 +11,7 @@ const City = () => {
           <label htmlFor='city'>City</label>
           <select name='city' id='city' onChange={handleCountryChange} value={location.city}>
             <option value='' disabled>
-              Select
+              Select City
             </option>
             {!cities || loading ? (
               <option>Loading</option>
