@@ -27,6 +27,7 @@ function CountryProvider({ children }) {
 
   const handleCountryChange = (e) => {
     setLocation({ ...location, [e.target.name]: e.target.value })
+    if (e.target.name !== 'area') setError({ ...error, [e.target.name]: !e.target.value })
   }
 
   const { areas, cities, countries, loading } = data
@@ -34,11 +35,11 @@ function CountryProvider({ children }) {
   // get countries
   useEffect(() => {
     getData('http://46.101.108.59/api/countries')
-      .then((res) => setData({ ...data, countries: res }))
+      .then((res) => setData({ ...data, countries: res.data }))
       .catch((e) => console.error(e))
   }, [])
 
-  // get cities
+  // update cities
   useEffect(() => {
     if (location.country) {
       setData({ ...data, loading: true })
@@ -47,12 +48,12 @@ function CountryProvider({ children }) {
       const { id } = countries.find((c) => c.attributes.name === location.country)
 
       getData(`http://46.101.108.59/api/country/${id}/city`)
-        .then((res) => setData({ ...data, cities: res, loading: false }))
+        .then((res) => setData({ ...data, cities: res.data, loading: false }))
         .catch((e) => console.error(e))
     }
   }, [location.country])
 
-  // get areas
+  // set areas if the country is Egypt
   useEffect(() => {
     if (location.country === 'Egypt' && location.city) {
       setData({ ...data, loading: true })
@@ -62,15 +63,10 @@ function CountryProvider({ children }) {
       const { id: countryID } = countries.find((c) => c.attributes.name === location.country)
 
       getData(`http://46.101.108.59/api//country/${countryID}/city/${cityID}/area`)
-        .then((res) => setData({ ...data, areas: res, loading: false }))
+        .then((res) => setData({ ...data, areas: res.data, loading: false }))
         .catch((e) => console.error(e))
     }
   }, [location.city])
-
-  // set Errors
-  useEffect(() => {
-    setError({ ...error, city: !location.city, country: !location.country })
-  }, [location.country, location.city])
 
   return (
     <CountryContext.Provider
@@ -81,6 +77,7 @@ function CountryProvider({ children }) {
         loading,
         location,
         countries,
+        setError,
         handleCountryChange
       }}
     >

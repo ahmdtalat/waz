@@ -6,19 +6,30 @@ import City from './components/City'
 import Area from './components/Area'
 
 const Location = () => {
-  const { location } = useContext(CountryContext)
+  const { location, error, setError } = useContext(CountryContext)
 
   const handleSubmit = (e) => {
+    // imitate a form submit
     e.preventDefault()
-    alert(JSON.stringify(location))
+    if (!location.country || !location.city) {
+      setError({ ...error, city: !location.city, country: !location.country })
+      return
+    }
+    window.confirm(
+      // format the alert msg
+      `Your location: \nCountry: ${location.country}\nCity: ${location.city}${
+        location.area ? `\nArea:${location.area}` : '\n'
+      }`
+    )
   }
+
   return (
     <div className='App'>
       <Country />
       <City />
       <Area />
-      <button type='submit' onClick={handleSubmit} disabled={!location.country || !location.city}>
-        Save
+      <button type='submit' onClick={handleSubmit}>
+        Submit
       </button>
     </div>
   )

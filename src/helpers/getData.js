@@ -3,9 +3,6 @@
 // the response
 const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
 
-export const getData = async (url) => {
-  const response = await fetch(proxyUrl + url, { cache: 'force-cache' })
-  const result = await response.json()
-  const data = await result.data
-  return data
+export const getData = (url) => {
+  return fetch(proxyUrl + url, { cache: 'force-cache' }).then((res) => res.json())
 }

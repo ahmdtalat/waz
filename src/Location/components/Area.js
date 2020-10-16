@@ -11,14 +11,15 @@ const Area = () => {
           <label htmlFor='area'>
             Area<span className='optional'> (optional) </span>
           </label>
+
           <select name='area' id='area' onChange={handleCountryChange} value={location.area}>
             <option value='' disabled>
               Select
             </option>
-            {!areas || loading ? (
-              <option>Loading</option>
+            {loading ? (
+              <option disabled>Loading ...</option>
             ) : (
-              areas.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
+              areas?.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
             )}
           </select>
         </div>

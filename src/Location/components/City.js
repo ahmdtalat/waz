@@ -11,10 +11,10 @@ const City = () => {
         <option value='' disabled>
           Select City
         </option>
-        {!cities || loading ? (
-          <option>Loading</option>
+        {loading ? (
+          <option disabled> Loading ...</option>
         ) : (
-          cities.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
+          cities?.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
         )}
       </select>
       {error.city ? <span className='error'>please select a city</span> : null}

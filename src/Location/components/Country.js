@@ -13,9 +13,9 @@ const Country = () => {
           Select Country
         </option>
         {!countries ? (
-          <option>Loading</option>
+          <option disabled>Loading ...</option>
         ) : (
-          countries.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
+          countries?.map(({ id, attributes: { name } }) => <option key={id}>{name}</option>)
         )}
       </select>
       {error.country ? <span className='error'>please select a country</span> : null}

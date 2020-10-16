@@ -1,8 +1,8 @@
 import React from 'react'
+import './App.css'
 
 import { CountryProvider } from './context'
 import Location from './Location'
-import './App.css'
 
 function App() {
   return (
