@@ -10,8 +10,7 @@ function CountryProvider({ children }) {
   const [data, setData] = useState({
     countries: null,
     cities: null,
-    areas: null,
-    loading: false
+    areas: null
   })
 
   const [location, setLocation] = useState({
@@ -19,6 +18,8 @@ function CountryProvider({ children }) {
     city: '',
     area: ''
   })
+
+  const [loading, setLoading] = useState(false)
 
   const [error, setError] = useState({
     country: false,
@@ -30,7 +31,7 @@ function CountryProvider({ children }) {
     if (e.target.name !== 'area') setError({ ...error, [e.target.name]: !e.target.value })
   }
 
-  const { areas, cities, countries, loading } = data
+  const { areas, cities, countries } = data
 
   // get countries
   useEffect(() => {
@@ -42,13 +43,16 @@ function CountryProvider({ children }) {
   // update cities
   useEffect(() => {
     if (location.country) {
-      setData({ ...data, loading: true })
+      setLoading(true)
       setLocation({ ...location, city: '', area: '' })
 
       const { id } = countries.find((c) => c.attributes.name === location.country)
 
       getData(`http://46.101.108.59/api/country/${id}/city`)
-        .then((res) => setData({ ...data, cities: res.data, loading: false }))
+        .then((res) => {
+          setData({ ...data, cities: res.data })
+          setLoading(false)
+        })
         .catch((e) => console.error(e))
     }
   }, [location.country])
@@ -56,14 +60,16 @@ function CountryProvider({ children }) {
   // set areas if the country is Egypt
   useEffect(() => {
     if (location.country === 'Egypt' && location.city) {
-      setData({ ...data, loading: true })
       setLocation({ ...location, area: '' })
 
       const { id: cityID } = cities.find((c) => c.attributes.name === location.city)
       const { id: countryID } = countries.find((c) => c.attributes.name === location.country)
 
       getData(`http://46.101.108.59/api//country/${countryID}/city/${cityID}/area`)
-        .then((res) => setData({ ...data, areas: res.data, loading: false }))
+        .then((res) => {
+          setData({ ...data, areas: res.data })
+          setLoading(false)
+        })
         .catch((e) => console.error(e))
     }
   }, [location.city])
