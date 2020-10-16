@@ -1,4 +1,4 @@
-form{
+/* form{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -52,4 +52,4 @@ button:disabled{
 .error{
   font-size: 14px;
   color: #ff0000;
-}
+} */
