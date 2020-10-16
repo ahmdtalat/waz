@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
-import { fetchData } from './helper'
+import { getData } from '../helpers/getData'
 
 const CountryContext = React.createContext()
 CountryContext.displayName = 'Country Context'
@@ -33,7 +33,7 @@ function CountryProvider({ children }) {
 
   // get countries
   useEffect(() => {
-    fetchData('http://46.101.108.59/api/countries')
+    getData('http://46.101.108.59/api/countries')
       .then((res) => setData({ ...data, countries: res }))
       .catch((e) => console.error(e))
   }, [])
@@ -46,7 +46,7 @@ function CountryProvider({ children }) {
 
       const { id } = countries.find((c) => c.attributes.name === location.country)
 
-      fetchData(`http://46.101.108.59/api/country/${id}/city`)
+      getData(`http://46.101.108.59/api/country/${id}/city`)
         .then((res) => setData({ ...data, cities: res, loading: false }))
         .catch((e) => console.error(e))
     }
@@ -61,7 +61,7 @@ function CountryProvider({ children }) {
       const { id: cityID } = cities.find((c) => c.attributes.name === location.city)
       const { id: countryID } = countries.find((c) => c.attributes.name === location.country)
 
-      fetchData(`http://46.101.108.59/api//country/${countryID}/city/${cityID}/area`)
+      getData(`http://46.101.108.59/api//country/${countryID}/city/${cityID}/area`)
         .then((res) => setData({ ...data, areas: res, loading: false }))
         .catch((e) => console.error(e))
     }
