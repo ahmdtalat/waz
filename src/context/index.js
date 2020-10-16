@@ -1,95 +1,40 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react'
+import React, { useReducer } from 'react'
 
-import { getData } from '../helpers/getData'
+import locationReducer from './reducer'
+
+const initialState = {
+  data: {
+    countries: null,
+    cities: null,
+    areas: null
+  },
+  location: {
+    country: '',
+    city: '',
+    area: ''
+  },
+  loading: {
+    city: false,
+    area: false
+  },
+  error: {
+    country: false,
+    city: false
+  }
+}
 
 const CountryContext = React.createContext()
 CountryContext.displayName = 'Country Context'
 
-function CountryProvider({ children }) {
-  const [data, setData] = useState({
-    countries: null,
-    cities: null,
-    areas: null
-  })
+const CountryProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(locationReducer, initialState)
 
-  const [location, setLocation] = useState({
-    country: '',
-    city: '',
-    area: ''
-  })
-
-  const [loading, setLoading] = useState(false)
-
-  const [error, setError] = useState({
-    country: false,
-    city: false
-  })
-
-  const handleCountryChange = (e) => {
-    setLocation({ ...location, [e.target.name]: e.target.value })
-    if (e.target.name !== 'area') setError({ ...error, [e.target.name]: !e.target.value })
+  const handleOptionChange = (e) => {
+    dispatch({ type: 'update location', key: e.target.name, value: e.target.value })
   }
+  const value = [state, dispatch, handleOptionChange]
 
-  const { areas, cities, countries } = data
-
-  // get countries
-  useEffect(() => {
-    getData('http://46.101.108.59/api/countries')
-      .then((res) => setData({ ...data, countries: res.data }))
-      .catch((e) => console.error(e))
-  }, [])
-
-  // update cities
-  useEffect(() => {
-    if (location.country) {
-      setLoading(true)
-      setLocation({ ...location, city: '', area: '' })
-
-      const { id } = countries.find((c) => c.attributes.name === location.country)
-
-      getData(`http://46.101.108.59/api/country/${id}/city`)
-        .then((res) => {
-          setData({ ...data, cities: res.data })
-          setLoading(false)
-        })
-        .catch((e) => console.error(e))
-    }
-  }, [location.country])
-
-  // set areas if the country is Egypt
-  useEffect(() => {
-    if (location.country === 'Egypt' && location.city) {
-      setLocation({ ...location, area: '' })
-
-      const { id: cityID } = cities.find((c) => c.attributes.name === location.city)
-      const { id: countryID } = countries.find((c) => c.attributes.name === location.country)
-
-      getData(`http://46.101.108.59/api//country/${countryID}/city/${cityID}/area`)
-        .then((res) => {
-          setData({ ...data, areas: res.data })
-          setLoading(false)
-        })
-        .catch((e) => console.error(e))
-    }
-  }, [location.city])
-
-  return (
-    <CountryContext.Provider
-      value={{
-        error,
-        areas,
-        cities,
-        loading,
-        location,
-        countries,
-        setError,
-        handleCountryChange
-      }}
-    >
-      {children}
-    </CountryContext.Provider>
-  )
+  return <CountryContext.Provider value={value}>{children}</CountryContext.Provider>
 }
 
 export { CountryProvider, CountryContext }
